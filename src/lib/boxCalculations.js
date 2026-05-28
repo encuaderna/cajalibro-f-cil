@@ -1,10 +1,55 @@
 // Tipos de caja
 export const BOX_TYPES = [
   {
-    id: "estuche",
-    name: "Estuche",
+    id: "clamshell",
+    name: "Caja Clamshell",
+    alias: "Caja tipo almeja / concha",
     description:
-      "Caja cerrada con tapa integrada. Protege el libro por todos sus lados. Requiere 6 piezas: base, tapa, 2 laterales largos, 2 laterales cortos.",
+      "Una sola pieza con base a la medida del libro y tapa con bisagra en el lomo. Al abrirse, un lado queda completamente expuesto. Ideal para restauración y archivos. Se fabrica con cartón y papeles libres de ácido.",
+    pieces: [
+      { name: "Base", axis: "ancho x profundidad", qty: 1 },
+      { name: "Lateral largo (base)", axis: "alto x profundidad", qty: 2 },
+      { name: "Lateral corto (base)", axis: "ancho x alto", qty: 2 },
+      { name: "Tapa", axis: "ancho x profundidad", qty: 1 },
+      { name: "Lateral largo (tapa)", axis: "alto x profundidad", qty: 2 },
+      { name: "Lateral corto (tapa)", axis: "ancho x alto", qty: 2 },
+    ],
+  },
+  {
+    id: "tapa_abatible",
+    name: "Caja tapa abatible",
+    alias: "Caja de Conservación",
+    description:
+      "Similar a la clamshell pero más sencilla. La tapa está unida por uno de los lados largos o cortos mediante bisagra de cartón. Ideal para manuscritos, folletos o libros de archivo.",
+    pieces: [
+      { name: "Base", axis: "ancho x profundidad", qty: 1 },
+      { name: "Lateral largo", axis: "alto x profundidad", qty: 2 },
+      { name: "Lateral corto", axis: "ancho x alto", qty: 2 },
+      { name: "Tapa", axis: "ancho x profundidad", qty: 1 },
+      { name: "Lengüeta de bisagra", axis: "ancho x alto", qty: 1 },
+    ],
+  },
+  {
+    id: "tapa_separada",
+    name: "Caja con tapa separada",
+    alias: "Base + tapa independiente",
+    description:
+      "Dos piezas independientes: una base y una tapa que cubre parcial o totalmente el cuerpo. Modelo estándar para almacenamiento de colecciones y protección frente al polvo y la luz.",
+    pieces: [
+      { name: "Base inferior", axis: "ancho x profundidad", qty: 1 },
+      { name: "Lateral largo (base)", axis: "ancho x alto/2", qty: 2 },
+      { name: "Lateral corto (base)", axis: "profundidad x alto/2", qty: 2 },
+      { name: "Tapa superior", axis: "ancho x profundidad", qty: 1 },
+      { name: "Lateral largo (tapa)", axis: "ancho x alto/2", qty: 2 },
+      { name: "Lateral corto (tapa)", axis: "profundidad x alto/2", qty: 2 },
+    ],
+  },
+  {
+    id: "estuche",
+    name: "Estuche (Slipcase)",
+    alias: "Funda deslizante de lujo",
+    description:
+      "Funda rígida abierta por uno de los lados. El libro se desliza hacia adentro quedando el lomo expuesto. Muy común en ediciones de lujo o colecciones encuadernadas.",
     pieces: [
       { name: "Base", axis: "ancho x profundidad", qty: 1 },
       { name: "Tapa", axis: "ancho x profundidad", qty: 1 },
@@ -13,27 +58,17 @@ export const BOX_TYPES = [
     ],
   },
   {
-    id: "carpeta",
-    name: "Carpeta",
+    id: "storbox",
+    name: "Caja Storbox",
+    alias: "Caja de mudanza / archivo activo",
     description:
-      "Estructura abierta con solapas. Envuelve el libro sin cerrarlo completamente. Requiere 3 piezas: plano central, 2 solapas laterales.",
+      "Fabricada en cartón corrugado kraft. Resistente, modular e incluye manillas para transporte. Ideal para grandes cantidades de libros almacenados verticalmente en estanterías.",
     pieces: [
-      { name: "Plano central", axis: "ancho x alto", qty: 1 },
-      { name: "Solapa lateral", axis: "profundidad x alto", qty: 2 },
-    ],
-  },
-  {
-    id: "tapa",
-    name: "Caja con tapa",
-    description:
-      "Caja base separada de su tapa. Permite acceso vertical al libro. Requiere 10 piezas: base inferior, 4 laterales de base, tapa superior, 4 laterales de tapa.",
-    pieces: [
-      { name: "Base inferior", axis: "ancho x profundidad", qty: 1 },
-      { name: "Lateral largo (base)", axis: "ancho x alto/2", qty: 2 },
-      { name: "Lateral corto (base)", axis: "profundidad x alto/2", qty: 2 },
-      { name: "Tapa superior", axis: "ancho x profundidad", qty: 1 },
-      { name: "Lateral largo (tapa)", axis: "ancho x alto/2", qty: 2 },
-      { name: "Lateral corto (tapa)", axis: "profundidad x alto/2", qty: 2 },
+      { name: "Base", axis: "ancho x profundidad", qty: 1 },
+      { name: "Tapa", axis: "ancho x profundidad", qty: 1 },
+      { name: "Lateral largo", axis: "ancho x alto", qty: 2 },
+      { name: "Lateral corto", axis: "profundidad x alto", qty: 2 },
+      { name: "Manilla de transporte", axis: "ancho x alto", qty: 2 },
     ],
   },
 ];
@@ -49,16 +84,10 @@ export const MATERIALS = [
 // Margen estándar en mm
 const MARGIN = 2;
 
-/**
- * Fórmula: Medida Pieza = (Dimensión Libro + 2mm margen) + (2 × Grosor Material)
- */
 function applyFormula(dimension, thickness) {
   return dimension + MARGIN + 2 * thickness;
 }
 
-/**
- * Calcula todas las piezas para un tipo de caja, dimensiones de libro y material.
- */
 export function calculatePieces(bookDimensions, boxType, material) {
   const { alto, ancho, profundidad } = bookDimensions;
   const t = material.thickness;
@@ -89,9 +118,6 @@ export function calculatePieces(bookDimensions, boxType, material) {
   return { pieces, needsAngleCut };
 }
 
-/**
- * Genera instrucciones de montaje según el tipo de caja.
- */
 export function getInstructions(boxType, material) {
   const needsAngleCut = material.thickness > 3;
 
@@ -106,21 +132,23 @@ export function getInstructions(boxType, material) {
   }
 
   const typeInstructions = {
-    estuche: [
-      "Pegar los 2 laterales largos a la base, alineando los bordes exteriores.",
-      "Pegar los 2 laterales cortos entre los laterales largos, formando la caja.",
-      "Verificar escuadra con una regla en L antes de que el adhesivo seque.",
-      "Colocar la tapa sobre la estructura. Ajustar si es necesario.",
+    clamshell: [
+      "Construir la base: pegar los 4 laterales a la pieza inferior.",
+      "Verificar escuadra de la base con una regla en L.",
+      "Construir la tapa de igual forma que la base.",
+      "Unir base y tapa con una tira de cartón o tela en el lomo (bisagra).",
+      "Verificar que la tapa cierre completamente y el libro entre sin resistencia.",
+      "Dejar secar bajo peso uniforme durante mínimo 3 horas.",
+    ],
+    tapa_abatible: [
+      "Construir la base pegando los 4 laterales a la pieza inferior.",
+      "Verificar escuadra de la base con una regla en L.",
+      "Pegar la tapa plana sobre la base, dejando libre el lado de bisagra.",
+      "Adherir la lengüeta de bisagra conectando tapa y lateral correspondiente.",
+      "Comprobar el movimiento de apertura y cierre antes de que seque el adhesivo.",
       "Dejar secar bajo peso uniforme durante mínimo 2 horas.",
     ],
-    carpeta: [
-      "Colocar el plano central sobre una superficie plana.",
-      "Marcar las líneas de pliegue a la distancia del grosor del libro + margen.",
-      "Pegar las solapas laterales alineadas con las marcas de pliegue.",
-      "Plegar las solapas hacia adentro para verificar el ajuste.",
-      "Dejar secar bajo peso uniforme durante mínimo 1 hora.",
-    ],
-    tapa: [
+    tapa_separada: [
       "Construir la base: pegar los 4 laterales de base a la pieza inferior.",
       "Verificar escuadra de la base con una regla en L.",
       "Construir la tapa: pegar los 4 laterales de tapa a la pieza superior.",
@@ -128,7 +156,23 @@ export function getInstructions(boxType, material) {
       "Si la tapa queda ajustada, lijar 0.5 mm en los laterales de tapa.",
       "Dejar secar ambas partes bajo peso uniforme durante mínimo 2 horas.",
     ],
+    estuche: [
+      "Pegar los 2 laterales largos a la base, alineando los bordes exteriores.",
+      "Pegar los 2 laterales cortos entre los laterales largos, formando la caja.",
+      "Verificar escuadra con una regla en L antes de que el adhesivo seque.",
+      "Colocar la tapa sobre la estructura. Ajustar si es necesario.",
+      "Dejar secar bajo peso uniforme durante mínimo 2 horas.",
+    ],
+    storbox: [
+      "Marcar y puntear las líneas de pliegue en los laterales largos.",
+      "Pegar los 2 laterales largos a la base.",
+      "Pegar los 2 laterales cortos cerrando la caja.",
+      "Reforzar las esquinas exteriores con cinta de papel kraft.",
+      "Instalar las manillas de transporte en los laterales largos con remaches o adhesivo fuerte.",
+      "Verificar que la tapa encaje correctamente sobre la caja base.",
+      "Dejar secar 4 horas antes de cargar.",
+    ],
   };
 
-  return [...base, ...typeInstructions[boxType.id]];
+  return [...base, ...(typeInstructions[boxType.id] || [])];
 }
