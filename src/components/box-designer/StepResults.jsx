@@ -231,7 +231,7 @@ export default function StepResults({
         <h3 className="text-lg font-semibold text-foreground mb-3">
           Instrucciones de montaje
         </h3>
-        <AssemblyProgress checked={checked} total={instructions.length} />
+        <AssemblyProgress checked={checked} instructions={instructions} />
         <ol className="space-y-3">
           {instructions.map((inst, i) => {
             const isAlert = inst.startsWith("ALERTA");
