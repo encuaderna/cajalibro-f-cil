@@ -13,6 +13,7 @@ import InteractiveSheetLayout from "@/components/box-designer/InteractiveSheetLa
 import MultiSheetManager from "@/components/box-designer/MultiSheetManager";
 import ExportReportDialog from "@/components/box-designer/ExportReportDialog";
 import SnapshotManager from "@/components/box-designer/SnapshotManager";
+import PhotoCarousel from "@/components/box-designer/PhotoCarousel";
 import jsPDF from "jspdf";
 import { exportLayoutPdf } from "@/lib/exportPdfLayout";
 
@@ -142,6 +143,9 @@ export default function StepResults({
       <div className="mt-6">
         <BoxViewer3D boxType={boxType} dimensions={dimensions} material={material} />
       </div>
+
+      {/* ── Carrusel de fotos ── */}
+      <PhotoCarousel />
 
       {/* ── Visualización SVG ── */}
       <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
