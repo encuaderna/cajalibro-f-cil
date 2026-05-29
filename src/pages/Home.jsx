@@ -11,6 +11,8 @@ import StepBoxType from "@/components/box-designer/StepBoxType";
 import StepMaterial from "@/components/box-designer/StepMaterial";
 import StepResults from "@/components/box-designer/StepResults";
 import { useAppPreferences } from "@/hooks/useAppPreferences";
+import { loadDraft, clearDraft, hasDraft, useAutoSaveDraft } from "@/hooks/useLocalDraft";
+import DraftRestoreBanner from "@/components/box-designer/DraftRestoreBanner";
 
 const INITIAL_DIMENSIONS = { alto: 0, ancho: 0, profundidad: 0 };
 
@@ -23,6 +25,10 @@ export default function Home() {
   const [dimensions, setDimensions] = useState(INITIAL_DIMENSIONS);
   const [boxType, setBoxType] = useState(null);
   const [material, setMaterial] = useState(null);
+  const [pendingDraft, setPendingDraft] = useState(() => hasDraft() ? loadDraft() : null);
+
+  // Auto-guardado en localStorage
+  useAutoSaveDraft({ step, dimensions, boxType, material });
 
   // Cargar proyecto guardado desde sessionStorage (después de hacer clic en "Cargar" en MyProjects)
   useEffect(() => {
@@ -46,6 +52,22 @@ export default function Home() {
     setDimensions(INITIAL_DIMENSIONS);
     setBoxType(null);
     setMaterial(null);
+    clearDraft();
+    setPendingDraft(null);
+  };
+
+  const handleRestoreDraft = () => {
+    if (!pendingDraft) return;
+    setDimensions(pendingDraft.dimensions || INITIAL_DIMENSIONS);
+    setBoxType(pendingDraft.boxType || null);
+    setMaterial(pendingDraft.material || null);
+    setStep(pendingDraft.step || 1);
+    setPendingDraft(null);
+  };
+
+  const handleDiscardDraft = () => {
+    clearDraft();
+    setPendingDraft(null);
   };
 
   const handleWelcomeComplete = () => {
@@ -99,6 +121,12 @@ export default function Home() {
             <MaterialLibrary />
           </div>
         </header>
+
+        <DraftRestoreBanner
+          draft={pendingDraft}
+          onRestore={handleRestoreDraft}
+          onDiscard={handleDiscardDraft}
+        />
 
         <StepIndicator currentStep={step} />
 
