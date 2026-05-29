@@ -12,6 +12,7 @@ import SaveProjectDialog from "@/components/box-designer/SaveProjectDialog";
 import InteractiveSheetLayout from "@/components/box-designer/InteractiveSheetLayout";
 import MultiSheetManager from "@/components/box-designer/MultiSheetManager";
 import ExportReportDialog from "@/components/box-designer/ExportReportDialog";
+import SnapshotManager from "@/components/box-designer/SnapshotManager";
 import jsPDF from "jspdf";
 import { exportLayoutPdf } from "@/lib/exportPdfLayout";
 
@@ -21,6 +22,7 @@ export default function StepResults({
   material,
   onBack,
   onReset,
+  onRestore,
 }) {
   const { pieces, needsAngleCut } = useMemo(
     () => calculatePieces(dimensions, boxType, material),
@@ -286,6 +288,12 @@ export default function StepResults({
           boxType={boxType}
           material={material}
           needsAngleCut={needsAngleCut}
+        />
+        <SnapshotManager
+          dimensions={dimensions}
+          boxType={boxType}
+          material={material}
+          onRestore={onRestore}
         />
         <Button variant="outline" onClick={onReset} className="h-12 px-6 text-base">
           <RotateCcw className="mr-2 h-4 w-4" />

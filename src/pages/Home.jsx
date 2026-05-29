@@ -163,6 +163,12 @@ export default function Home() {
             material={material}
             onBack={() => setStep(3)}
             onReset={reset}
+            onRestore={({ dimensions: d, boxType: bt, material: m }) => {
+              setDimensions(d);
+              setBoxType(bt);
+              setMaterial(m);
+              setStep(4);
+            }}
           />
         )}
       </div>
