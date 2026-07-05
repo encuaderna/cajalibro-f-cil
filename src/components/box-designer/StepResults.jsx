@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowLeft, Download, AlertTriangle, RotateCcw } from "lucide-react";
@@ -20,6 +20,9 @@ import PreFabricationChecklist from "@/components/box-designer/PreFabricationChe
 import FavoritesManager from "@/components/box-designer/FavoritesManager";
 import MaterialComparisonTable from "@/components/box-designer/MaterialComparisonTable";
 import CriticalAlertsPanel from "@/components/box-designer/CriticalAlertsPanel";
+import CutDiagram2D from "@/components/box-designer/CutDiagram2D";
+import PrintCutList from "@/components/box-designer/PrintCutList";
+import { saveRecentCalculation } from "@/components/box-designer/RecentCalculations";
 import jsPDF from "jspdf";
 import { exportLayoutPdf } from "@/lib/exportPdfLayout";
 
@@ -47,6 +50,12 @@ export default function StepResults({
   const [selectedPieceIndex, setSelectedPieceIndex] = useState(0);
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [sheets, setSheets] = useState([]);
+
+  // Guardar en historial de cálculos recientes al llegar a resultados
+  useEffect(() => {
+    saveRecentCalculation({ dimensions, boxType, material });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const toggleCheck = (i) => {
     setChecked((prev) => prev.map((v, idx) => (idx === i ? !v : v)));
@@ -165,6 +174,9 @@ export default function StepResults({
         material={material}
         needsAngleCut={needsAngleCut}
       />
+
+      {/* ── Vista previa gráfica 2D ── */}
+      <CutDiagram2D pieces={pieces} />
 
       {/* ── Visor 3D ── */}
       <div className="mt-6">
@@ -348,6 +360,12 @@ export default function StepResults({
           boxType={boxType}
           material={material}
           onRestore={onRestore}
+        />
+        <PrintCutList
+          pieces={pieces}
+          dimensions={dimensions}
+          boxType={boxType}
+          material={material}
         />
         <Button variant="outline" onClick={onReset} className="h-12 px-6 text-base">
           <RotateCcw className="mr-2 h-4 w-4" />

@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import BookSizePresets from "@/components/box-designer/BookSizePresets";
+import RecentCalculations from "@/components/box-designer/RecentCalculations";
 
 const fields = [
   { key: "alto", label: "Alto del libro (mm)", placeholder: "Ej: 240" },
@@ -11,7 +12,7 @@ const fields = [
   { key: "profundidad", label: "Profundidad / Lomo (mm)", placeholder: "Ej: 30" },
 ];
 
-export default function StepDimensions({ dimensions, onChange, onNext }) {
+export default function StepDimensions({ dimensions, onChange, onNext, onRestoreRecent }) {
   const allValid =
     dimensions.alto > 0 && dimensions.ancho > 0 && dimensions.profundidad > 0;
 
@@ -28,6 +29,13 @@ export default function StepDimensions({ dimensions, onChange, onNext }) {
       <p className="text-muted-foreground text-sm mb-6">
         Introduce las medidas del libro en milímetros, o elige un formato estándar.
       </p>
+
+      <RecentCalculations
+        onRestore={(item) => {
+          onChange(item.dimensions);
+          if (onRestoreRecent) onRestoreRecent(item);
+        }}
+      />
 
       <BookSizePresets onSelect={onChange} />
 

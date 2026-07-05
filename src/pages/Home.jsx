@@ -145,6 +145,13 @@ export default function Home() {
             dimensions={dimensions}
             onChange={setDimensions}
             onNext={() => setStep(2)}
+            onRestoreRecent={(item) => {
+              if (item.boxType?.id && item.material?.name) {
+                setBoxType(item.boxType);
+                setMaterial(item.material);
+                setStep(4);
+              }
+            }}
           />
         )}
 

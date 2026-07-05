@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   Accessibility,
   ZoomIn,
   ZoomOut,
@@ -126,17 +132,24 @@ export default function AccessibilityToolbar() {
                 Tamaño de texto ({settings.fontSize}%)
               </p>
               <div className="flex items-center gap-2">
-                <Button
-                  size="icon"
-                  variant="outline"
-                  aria-label="Reducir tamaño de texto"
-                  disabled={settings.fontSize <= 70}
-                  onClick={() =>
-                    update("fontSize", Math.max(70, settings.fontSize - FONT_STEP))
-                  }
-                >
-                  <ZoomOut className="h-4 w-4" />
-                </Button>
+                <TooltipProvider delayDuration={300}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        size="icon"
+                        variant="outline"
+                        aria-label="Reducir tamaño de texto"
+                        disabled={settings.fontSize <= 70}
+                        onClick={() =>
+                          update("fontSize", Math.max(70, settings.fontSize - FONT_STEP))
+                        }
+                      >
+                        <ZoomOut className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Alt+−</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
                 <div
                   className="flex-1 bg-secondary rounded-full h-2 overflow-hidden"
                   role="progressbar"
@@ -152,17 +165,24 @@ export default function AccessibilityToolbar() {
                     }}
                   />
                 </div>
-                <Button
-                  size="icon"
-                  variant="outline"
-                  aria-label="Aumentar tamaño de texto"
-                  disabled={settings.fontSize >= 160}
-                  onClick={() =>
-                    update("fontSize", Math.min(160, settings.fontSize + FONT_STEP))
-                  }
-                >
-                  <ZoomIn className="h-4 w-4" />
-                </Button>
+                <TooltipProvider delayDuration={300}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        size="icon"
+                        variant="outline"
+                        aria-label="Aumentar tamaño de texto"
+                        disabled={settings.fontSize >= 160}
+                        onClick={() =>
+                          update("fontSize", Math.min(160, settings.fontSize + FONT_STEP))
+                        }
+                      >
+                        <ZoomIn className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Alt++</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
             </div>
 
@@ -273,6 +293,9 @@ export default function AccessibilityToolbar() {
             {/* Interruptores de modo */}
             <div className="space-y-2">
               {/* Alto contraste */}
+              <TooltipProvider delayDuration={300}>
+              <Tooltip>
+                <TooltipTrigger asChild>
               <button
                 onClick={() => update("highContrast", !settings.highContrast)}
                 aria-pressed={settings.highContrast}
@@ -302,7 +325,14 @@ export default function AccessibilityToolbar() {
                   />
                 </span>
               </button>
+              </TooltipTrigger>
+                <TooltipContent>Alt+C</TooltipContent>
+              </Tooltip>
+              </TooltipProvider>
 
+              <TooltipProvider delayDuration={300}>
+              <Tooltip>
+                <TooltipTrigger asChild>
               {/* Reducir movimiento */}
               <button
                 onClick={() => update("reducedMotion", !settings.reducedMotion)}
@@ -329,6 +359,10 @@ export default function AccessibilityToolbar() {
                   />
                 </span>
               </button>
+              </TooltipTrigger>
+                <TooltipContent>Alt+D</TooltipContent>
+              </Tooltip>
+              </TooltipProvider>
             </div>
 
             {/* Restablecer */}
